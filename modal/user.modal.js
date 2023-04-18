@@ -106,9 +106,10 @@ module.exports = class user {
 
                         if(isMatch){
                             /**create jwt token */
+                            console.log(success[0][0].id)
                             const token =    jwt.sign({
-                                    userId : success[0].id,
-                                    username : success[0].username
+                                    userId : success[0][0].id,
+                                    username : success[0][0].username
                                 },process.env.SECRET_KEY,{expiresIn : "24h"})
 
                             resolve({
