@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
-
+/**middleware authentication token */
 exports.Auth=async(req,res,next)=>{
     try{
      /**Access autherize validate request */

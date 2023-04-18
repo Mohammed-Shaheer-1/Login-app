@@ -3,7 +3,18 @@ const otpGenerator = require('otp-generator');
 const User = require('../modal/user.modal')
 const helper = require('../helper/helper');
 
-const con = require('../config/db.cofig')
+const con = require('../config/db.cofig');
+
+/**
+ *URL : http://localhost:8080/api/register
+ *  Method : POST
+ *  body={
+ *  username : "iam_ab",
+ *  password : "12345678",
+ *  profile : "base64",
+ *  email : "abc@gmail.com"
+ * }
+ *  */
 exports.register = async (req,res)=>{
     try{
         const { username, password, profile, email } = req.body;
@@ -20,7 +31,14 @@ exports.register = async (req,res)=>{
     
 }
 
-
+/**
+ *URL : http://localhost:8080/api/login
+ *  Method : POST
+ *  body={
+ *  username : "iam_ab",
+ *  password : "12345678",
+ * }
+ *  */
 exports.login = async (req,res)=>{
     try{
         const { username, password } = req.body;
@@ -38,7 +56,11 @@ exports.login = async (req,res)=>{
     } 
 }
 
-
+/**
+ *  URL : http://localhost:8080/api/user/:username
+ *  Method : GET
+ *  Body parms : username
+ *  */
 exports.getUser = async (req,res)=>{
     const { username } = req.params;
     try{
@@ -83,7 +105,7 @@ exports.getUser = async (req,res)=>{
 
     }
 } 
-
+/**updating user */
 exports.updateUser = async (req,res)=>{
     try{
         const { userId } =req.user;
@@ -135,7 +157,7 @@ exports.updateUser = async (req,res)=>{
    
 } 
 
-
+/** generate OTP */
 exports.generateOTP = async (req,res)=>{
     // Generate otp
     req.app.locals.OTP = await otpGenerator.generate(6, { lowerCaseAlphabets : false, upperCaseAlphabets:false, specialChars: false})
@@ -147,7 +169,7 @@ exports.generateOTP = async (req,res)=>{
     })
 
 } 
-
+/**verify OTP */
 exports.verifyOTP = async (req,res)=>{
     const { code } = req.query;
     if(parseInt(req.app.locals.OTP) === parseInt(code)){
@@ -169,9 +191,9 @@ exports.verifyOTP = async (req,res)=>{
 } 
 
 exports.createResetSession = async (req,res)=>{
-    res.json('register route')
+
 } 
 
 exports.resetPassword = async (req,res)=>{
-    res.json('register route')
+ 
 } 

@@ -8,6 +8,7 @@ const helper = require('../helper/helper')
 
 module.exports = class user {
     constructor() { }
+    /**user registration */
     static addUser(username, password, profile, email) {
         return new Promise((resolve, reject) => {
             //check the existing user
@@ -89,7 +90,7 @@ module.exports = class user {
 
     }
 
-
+    /**user login */
     static login(username, password){
         return new Promise((resolve,reject)=>{
             let sqlQuery = `CALL verifyUser('${username}')`;
