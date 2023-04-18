@@ -139,12 +139,33 @@ exports.updateUser = async (req,res)=>{
 exports.generateOTP = async (req,res)=>{
     // Generate otp
     req.app.locals.OTP = await otpGenerator.generate(6, { lowerCaseAlphabets : false, upperCaseAlphabets:false, specialChars: false})
-    res.status(201).send({code : req.app.locals.OTP})
+    res.status(201).json({
+        statusCode : 201,
+        success : true,
+        message : " OTP generated " ,
+        code : req.app.locals.OTP 
+    })
 
 } 
 
 exports.verifyOTP = async (req,res)=>{
-   
+    const { code } = req.query;
+    if(parseInt(req.app.locals.OTP) === parseInt(code)){
+        req.app.locals.OTP = null //reset the otp value
+        req.app.locals.resetSession = true //start session for reset password
+        res.status(201).json({
+            statusCode : 201,
+            success : true,
+            message : " Verification succefully "       
+        })
+
+    }else{
+        res.status(400).json({
+            statusCode : 400,
+            success : false,
+            message : " invalid OTP "       
+        })
+    }
 } 
 
 exports.createResetSession = async (req,res)=>{
