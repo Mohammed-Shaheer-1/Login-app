@@ -10,7 +10,6 @@ exports.Auth=async(req,res,next)=>{
      req.user = decodedToken
      next()
   
-
     }catch(err){
         return res.status(404).json({
             statusCode: 404,

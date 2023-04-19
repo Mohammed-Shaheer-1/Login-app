@@ -1,5 +1,10 @@
 /** */
 const bcrypt = require('bcrypt');
+
+
+/**
+ * verify the email
+ */
 module.exports = class helper
 {
     constructor(){}
