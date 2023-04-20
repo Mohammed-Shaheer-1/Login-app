@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const con = require('../config/db.cofig')
 const helper = require('../helper/helper')
-
+const mailer = require('../controller/mailer')
 
 module.exports = class user {
     constructor() { }
@@ -112,11 +112,13 @@ module.exports = class user {
                                     userId : success[0][0].id,
                                     username : success[0][0].username
                                 },process.env.SECRET_KEY,{expiresIn : "24h"})
-
+                         
+                        //   let genMail = await   mailer.SendGeneratedOTPCode('nerix50208@momoshe.com','123456')
+                        //   console.log("ff",genMail);
                             resolve({
                                 statusCode: 201,
                                 success: true,
-                                message: "success fully login",
+                                message: "success fully login",  
                                 token,
                                 data : [
                                     {user : success[0]}
