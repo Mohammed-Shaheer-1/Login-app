@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useEffect }  from 'react'
 import { Link } from 'react-router-dom';
 import avatar from '../assets/profile.png'
 import {Toaster} from 'react-hot-toast';
-import {useFormik} from 'formik'
+import {useFormik} from 'formik';
+
+
 import {usernameValidate} from '../helper/Validate'
+import {getUser} from '../helper/helper'
+
+import { useAuthStore } from '../store/store'
 
 import styles from '../styles/Username.module.css'
 function Username() {
+
+  const setUsername = useAuthStore(state => state.setUsername);
+
+
 
 const formik = useFormik({
   initialValues : {
@@ -16,9 +25,17 @@ const formik = useFormik({
   validateOnBlur : true,
   validateOnChange : true,
   onSubmit : async values => {
-    console.log(values);
+    // console.log(values);
+    setUsername(values.username);
+
+    // getUser( "shaheer").then((result) => {
+    //   console.log('Data fetched successfully',result);
+    // })
+    // .catch((error) => {
+    //   console.log('Error fetching data:', error);
+    // });
   }   
-})
+})                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
   return (
     <div className="container mx-auto">
       <Toaster position='top-center' reverseOrder={false}></Toaster>
@@ -39,7 +56,7 @@ const formik = useFormik({
               <div className="textbox flex flex-col items-center gap-6">
                   <input {...formik.getFieldProps('username')} className={styles.textbox} type="text" placeholder='Username' />
                   <button className={styles.btn} type='submit'>Let's Go</button>
-                  <small>{formik?.values.username }</small>
+                  {/* <small>{formik?.values.username }</small> */}
               </div>
 
               <div className="text-center py-4">

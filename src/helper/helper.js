@@ -1,11 +1,11 @@
 import axios  from "axios";
-
+import { API_BASE_URL } from "../config";
 /**Make Api requests */
 
 /** Authenticate function */
 export async function authenticate(username){
     try{
-        return await axios.post('/api/authenticate',{username:username})
+        return await axios.post(`${API_BASE_URL}/api/authenticate`,{username:username})
     } catch (err){
         return  {error : "Username dousn't exist...!"}
     } 
@@ -13,17 +13,15 @@ export async function authenticate(username){
 
 /** Get user details */
 export async function getUser(username){
-    try{
-         return await axios.get('/api/user/'+username)
-    } catch (err){
-        return  {error : "password dousn't mach...!"}
-    }
+
+         return await axios.get(`${API_BASE_URL}/api/user/${username}`)
+
 }
 
 /**Register user */
 export async function registerUser(creduntios){
     try{
-        return await axios.post('/api/register',creduntios)
+        return await axios.post(`${API_BASE_URL}/api/register`,creduntios)
     }catch(err){
         return Promise.rejuct({err})
     }
@@ -32,7 +30,7 @@ export async function registerUser(creduntios){
 /**Login function */
 export async function loginUser(username,password){
     try{
-            return await axios.post('/api/register',{username, password})
+            return await axios.post(`${API_BASE_URL}/api/register`,{username, password})
     }catch(err){
         return  {error : "password dousn't mach...!"}
     }
@@ -41,7 +39,7 @@ export async function loginUser(username,password){
 export async function updateUser(response){
     try{
             let token = localStorage.getItem('token')
-            return await axios.put('/api/updateUser',response,{headers :{"Authorization" : token}})
+            return await axios.put(`${API_BASE_URL}/api/updateUser`,response,{headers :{"Authorization" : token}})
     }catch(err){
         return  {error : "Cant't update the user...!"}
     }
@@ -51,7 +49,7 @@ export async function updateUser(response){
 
 export async function generateOTP(username){
     try{      
-            return await axios.get('/api/generateOTP',{params : {username}})
+            return await axios.get(`${API_BASE_URL}/api/generateOTP`,{params : {username}})
     }catch(err){
         return  {error : "Cant't generate OTP...!"}
     }
@@ -62,7 +60,7 @@ export async function generateOTP(username){
 
 export async function verifyOTP(username,code){
     try{      
-            return await  axios.get('/api/verifyOTP',{params : {username, code}})
+            return await  axios.get(`${API_BASE_URL}/api/verifyOTP`,{params : {username, code}})
     }catch(err){
         return  {error : "Cant't verify OTP...!"}
     }
@@ -72,7 +70,7 @@ export async function verifyOTP(username,code){
 /**Reset password  */
 export async function restPWD(username,password){
     try{      
-            return await  axios.put('/api/verifyOTP',{username,password})
+            return await  axios.put(`${API_BASE_URL}/api/verifyOTP`,{username,password})
     }catch(err){
         return  {error : "Cant't reset your password...!"}
     }
