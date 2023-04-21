@@ -1,6 +1,7 @@
 import axios  from "axios";
 import { API_BASE_URL } from "../config";
 /**Make Api requests */
+//https://docs.viator.com/partner-api/technical/#section/Access-to-endpoints
 
 /** Authenticate function */
 export async function authenticate(username){

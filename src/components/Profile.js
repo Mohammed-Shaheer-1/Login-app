@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import avatar from '../assets/profile.png';
-import toast, { Toaster } from 'react-hot-toast';
+import toast , { Toaster } from 'react-hot-toast';
 import { useFormik } from 'formik';
 import { profileValidation } from '../helper/Validate';
 import convertToBase64 from '../helper/convert';
