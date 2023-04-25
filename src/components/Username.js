@@ -1,12 +1,11 @@
 import React, { useEffect }  from 'react'
-import { Link } from 'react-router-dom';
 import avatar from '../assets/profile.png'
 import {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
-
+import { Link, useNavigate } from 'react-router-dom';
 
 import {usernameValidate} from '../helper/Validate'
-import {getUser} from '../helper/helper'
+
 
 import { useAuthStore } from '../store/store'
 
@@ -15,25 +14,20 @@ function Username() {
 
   const setUsername = useAuthStore(state => state.setUsername);
 
-
+  const navigate = useNavigate();
 
 const formik = useFormik({
   initialValues : {
     username : ""
   },
   validate : usernameValidate,
-  validateOnBlur : true,
-  validateOnChange : true,
+  validateOnBlur : false,
+  validateOnChange : false,
   onSubmit : async values => {
     // console.log(values);
     setUsername(values.username);
+    navigate('/password');
 
-    // getUser( "shaheer").then((result) => {
-    //   console.log('Data fetched successfully',result);
-    // })
-    // .catch((error) => {
-    //   console.log('Error fetching data:', error);
-    // });
   }   
 })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
   return (
