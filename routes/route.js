@@ -7,7 +7,7 @@ const controller = require('../controller/auth.controller')
 const {verifyUser} = require('../middleware/user.middleware');
 const {Auth,localVariables} = require('../middleware/auth.middleware')
 
-
+        
 
 /**POST Metheods */
 router.route('/register').post(controller.register)//register user
@@ -21,7 +21,7 @@ router.route('/user/:username').get(controller.getUser)//get user
 router.route('/generateOTP').get(verifyUser,localVariables,controller.generateOTP)//generate random OTP
 router.route('/verifyOTP').get(verifyUser,controller.verifyOTP)//verify genrated  OTP
 router.route('/createResetSession').get(controller.createResetSession)//reset all variables
-
+  
 /**PUT Metheods */
 router.route('/updateUser').put(Auth,controller.updateUser)//is use to update user profile
 router.route('/resetPassword').put(verifyUser,controller.resetPassword)//is use to reset password

@@ -1,0 +1,52 @@
+{
+    "value": {
+        "searchText": "",
+        "language": [
+            {}
+        ],
+        "currency": [
+            {}
+        ],
+        "tags": [
+            {
+                "tagId": "",
+                "name": "",
+                "parentTagIds": [],
+                "imgUrl": ""
+            }
+        ],
+        "specials": {
+                 "dealsAndDiscounts" :true,
+                 "freeCancellation" : false,
+                 "likelyToSellOut" : false,
+                 "skipTheLine" : "" ,
+                 "privateTour " : ""
+
+        },
+        "maxPrice": "",
+        "products": [
+            {
+                "totalCount": "",
+                "results": [
+                    {
+                        "productCode": "",
+                        "title": "",
+                        "rating": "",
+                        "description": "",
+                        "duration": "",
+                        "freeCancelltionAvailable": "",
+                        "price": [
+                            {
+                                "from": "",
+                                "discount": ""
+                            }
+                        ],
+                        "image": {
+                            "url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

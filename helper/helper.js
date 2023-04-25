@@ -22,7 +22,7 @@ module.exports = class helper
                     resolve(false)
                     // console.log('Invalid Email');
                 }
-                else
+                else 
                 {
                     resolve(true)
                     // console.log('Valid Email');

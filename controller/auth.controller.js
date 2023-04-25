@@ -20,7 +20,7 @@ const user = require('../modal/user.modal');
 exports.register = async (req, res) => {
     try {
         const { username, password, profile, email } = req.body;
-
+        
         let users = await User.addUser(username, password, profile, email)
         res.status(users.statusCode).json({
             success: users.success,
@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        let users = await User.login(username, password)
+        let users = await User.login(username, password)   
         res.status(users.statusCode).json({
             success: users.success,
             message: users.message,
@@ -72,13 +72,14 @@ exports.getUser = async (req, res) => {
             success: false,
             message: "Invalid user name !"
         })
-        let query = `SELECT u.id, u.username, u.email, u.first_name, u.last_name, u.mobile, u.address, u.profile, u.created_at, u.updated_at, u.deleted_at 
+        let query = `SELECT u.id, u.username, u.email, u.profile, u.created_at, u.updated_at, u.deleted_at 
         FROM users AS u
         WHERE u.username = '${username}';`
         con.query(query, (err, result) => {
             if (!err) {
+                console.log(result);
                 if (result[0].length != 0) {
-
+ 
                     res.status(200).json({
                         statusCode: 200,
                         success: true,
@@ -92,7 +93,7 @@ exports.getUser = async (req, res) => {
                         statusCode: 400,
                         success: false,
                         message: "Can't find user "
-                    })
+                    }) 
                 }
             } else {
                 res.status(500).json({
@@ -111,30 +112,50 @@ exports.getUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const { userId } = req.user;
+        console.log(userId);
         if (userId) {
-            const { email, profile } = req.body;
+            const {firstName,lastName,email,mobile,address, profile } = req.body;
             let emailVarify = await helper.isvalidEmail(email)
             console.log(emailVarify);
             if (emailVarify) {
-                // update the data
-                let query = `UPDATE users u
-                    SET u.email = '${email}', u.profile = '${profile}'
-                    WHERE u.id = ${userId}`;
-                con.query(query, (err, result) => {
-                    if (!err) {
-                        res.status(201).json({
-                            statusCode: 201,
-                            success: true,
-                            message: "updated succesfully"
-                        })
-                    } else {
-                        res.status(500).json({
-                            statusCode: 500,
-                            success: false,
-                            message: err.message
-                        })
-                    }
-                })
+                let sqlQuery = `SELECT * FROM details d
+                                WHERE d.email = '${email}'`
+                 con.query(sqlQuery,(err,result)=>{
+                    console.log("update",result);
+                    if(result.length === 0){
+                                let query =`CALL insertUserDetails('${firstName}','${lastName}','${email}','${mobile}','${address}','${profile}')`;
+                                con.query(query,(err,result)=>{
+                                    if(err) throw err.message
+                                    res.status(201).json({
+                                        statusCode : 201,
+                                        success : true,
+                                        message : "Added succefully"
+                                    })
+                                })
+                    }else{
+                                            // update the data
+                     let query = `UPDATE details d
+                     SET d.first_name = '${firstName}' ,d.last_name = '${lastName}', d.mobile = '${mobile}', d.profile = '${profile}', d.address = '${address}' ,d.email = '${email}'
+                     WHERE d.email = '${email}'`;
+                     con.query(query, (err, result) => {
+                                if (!err) {
+                                    console.log(result);
+                                    res.status(201).json({
+                                        statusCode: 201,
+                                        success: true,
+                                        message: "updated succesfully"
+                                    })
+                                } else {
+                                    res.status(500).json({
+                                        statusCode: 500,
+                                        success: false,
+                                        message: err.message
+                                    })
+                                }
+                            })
+                        }
+                 })               
+              
 
             } else {
 

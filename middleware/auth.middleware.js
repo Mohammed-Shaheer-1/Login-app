@@ -8,6 +8,7 @@ exports.Auth=async(req,res,next)=>{
      const token = req.headers.authorization;
      const decodedToken = await jwt.verify(token,process.env.SECRET_KEY)
      req.user = decodedToken
+     console.log("haiii");
      next()
   
     }catch(err){

@@ -11,16 +11,18 @@ module.exports = class user {
     /**user registration */
     static addUser(username, password, profile, email) {
         return new Promise((resolve, reject) => {
+
             //check the existing user
             let sql = `SELECT * FROM users u WHERE u.username = '${username}'`;
             let sqlQuery = `CALL verifyUser('${username}')`;
             let verifyUser = con.query(sqlQuery, async (err, success) => {
                 if (!err) {
+                    console.log(success[0][0]);
                     if (!success[0].length > 0) {
                         //generate hash password
                         const saltRounds = 10;
                         const salt = await bcrypt.genSalt(saltRounds);
-                        const hash = await bcrypt.hash(password, salt);
+                        const hash = await bcrypt.hash(password, salt); 
                         if (hash) {
                             /**check the email is valid or not  */
                             let isvalidEmail = await helper.isvalidEmail(email)
@@ -34,6 +36,7 @@ module.exports = class user {
                                             let sqlQuery = `CALL insertUsers('${username}','${hash}','${profile}','${email}')`;
                                             con.query(sqlQuery, (err, result) => {
                                                 if (!err) {
+                                             
                                                     resolve({
                                                         statusCode: 201,
                                                         success: true,
@@ -95,6 +98,7 @@ module.exports = class user {
         return new Promise((resolve,reject)=>{
             let sqlQuery = `CALL verifyUser('${username}')`;
             con.query(sqlQuery, async (err, success) => {
+                console.log("SS",success[0]);
                 if(success[0].length > 0){
                     let sqlQuery = `
                     SELECT u.password AS password 
@@ -102,7 +106,7 @@ module.exports = class user {
                     WHERE u.username = '${username}'`
                     con.query(sqlQuery,async (err,result)=>{
           
-                        let existingPwd = result[0].password;
+                        let existingPwd = result[0].password; 
                         const isMatch = await bcrypt.compare(password, existingPwd);
 
                         if(isMatch){
@@ -113,7 +117,7 @@ module.exports = class user {
                                     username : success[0][0].username
                                 },process.env.SECRET_KEY,{expiresIn : "24h"})
                          
-                        //   let genMail = await   mailer.SendGeneratedOTPCode('nerix50208@momoshe.com','123456')
+                        //   let genMail = await   mailer.SendGeneratedOTPCode('shanshaheer3@gmail.com','123456')
                         //   console.log("ff",genMail);
                             resolve({
                                 statusCode: 201,

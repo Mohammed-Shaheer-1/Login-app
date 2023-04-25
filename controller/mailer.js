@@ -15,7 +15,7 @@ exports.SendGeneratedOTPCode = (to, otp) =>
                 user : 'sp832154@gmail.com', // replace with your email address
                 pass : 'ybpkooosqsbpboeu' // replace with your email password
             },
-            secure : true, 
+            secure : true,  
         });
 
         const mailOptions = 
