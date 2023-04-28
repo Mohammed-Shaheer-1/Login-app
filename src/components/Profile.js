@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import avatar from '../assets/profile.png';
 import toast,{ Toaster } from 'react-hot-toast';
 import { useFormik } from 'formik';
@@ -10,21 +10,41 @@ import useFetch from '../hooks/fetch.hook';
 import { updateUser } from '../helper/helper'
 import styles from '../styles/Username.module.css';
 import extend from '../styles/Profile.module.css'
-
+import { useAuthStore } from '../store/store';
+import { getUserDetails } from '../helper/helper';
 function Profile() {
-
+  
+  const { username,userId } = useAuthStore(state => state.auth);
+  const [ profileData,setProfile ] = useState([])
+  const [ verify , setverify ] =  useState(false)
   const [file, setFile] = useState();
-  const [{ isLoading, apiData, serverError }] = useFetch();
+  const [ img,setImg ] = useState('');
+  const [{ isLoading, apiData, serverError }] = useFetch(`/user/${username}`);
   const navigate = useNavigate()
 
- 
+  useEffect(()=>{
+   
+   getUserDetails(userId).then((result)=>{
+    console.log("HH",result.data.data[0].result);
+    setProfile(result.data.data[0].result)
+    if(!result.data.data[0]){
+      setverify(true)
+    }
+    console.log("Profile",profileData.profile);
+    setImg(profileData.profile)
+   })
+
+
+
+  },[])
+
   const formik = useFormik({
     initialValues : {
-      firstName : "" ,
-      lastName:  '',
-      email:  '',
-      mobile:  '',
-      address : ''
+      firstName : profileData.first_name ,
+      lastName:  profileData.last_name,
+      email: profileData.email,
+      mobile:  profileData.mobile,
+      address : profileData.address
     },
     enableReinitialize: true,
     validate : profileValidation,
@@ -46,6 +66,7 @@ function Profile() {
   /** formik doensn't support file upload so we need to create this handler */
   const onUpload = async e => {
     const base64 = await convertToBase64(e.target.files[0]);
+    console.log(base64);
     setFile(base64);
   }
   // logout handler function
@@ -73,10 +94,11 @@ function Profile() {
             </span>
           </div>
 
-          <form className='py-1' onSubmit={formik.handleSubmit}>
+          <form className='py-1' onSubmit={formik.handleSubmit}> 
               <div className='profile flex justify-center py-4'>
                   <label htmlFor="profile">
-                    <img src={file || avatar} className={`${styles.profile_img} ${extend.profile_img}`} alt="avatar" />
+
+                    <img src={file || img || avatar} className={`${styles.profile_img} ${extend.profile_img}`} alt="avatar" />
                   </label>
                   
                   <input onChange={onUpload} type="file" id='profile' name='profile' />
@@ -84,7 +106,7 @@ function Profile() {
 
               <div className="textbox flex flex-col items-center gap-6">
                 <div className="name flex w-3/4 gap-10">
-                  <input {...formik.getFieldProps('firstName')} className={`${styles.textbox} ${extend.textbox}`} type="text" placeholder='FirstName' />
+                  <input {...formik.getFieldProps('firstName')} className={`${styles.textbox} ${extend.textbox}`} type="text"  placeholder='FirstName' />
                   <input {...formik.getFieldProps('lastName')} className={`${styles.textbox} ${extend.textbox}`} type="text" placeholder='LastName' />
                 </div>
 
@@ -95,7 +117,7 @@ function Profile() {
 
                
                   <input {...formik.getFieldProps('address')} className={`${styles.textbox} ${extend.textbox}`} type="text" placeholder='Address' />
-                  <button className={styles.btn} type='submit'>Update</button>
+                  <button className={styles.btn} type='submit'>{!verify ?  'Update' : 'Add'}</button>
                
                   
               </div>

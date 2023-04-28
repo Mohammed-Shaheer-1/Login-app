@@ -77,7 +77,7 @@ import jwt_decode from 'jwt-decode';
 // }
 
 // ******************************************************************
-
+/**Api */
 
 /** To get username from Token */
 export async function getUsername(){
@@ -106,12 +106,21 @@ export async function getUser({ username }){
     }
 }
 
+/**get user deatails */
+export async function getUserDetails(username){
+    try{
+        return  await axios.get(`${API_BASE_URL}/api/userDetails`,{params : {userId :21}});
+         
+    }catch(error){
+        return Promise.reject({ error })
+    }
+}
 /** register user function */
 export async function registerUser(credentials){
     try {
         console.log(credentials);
         const { data : { msg }, status } = await axios.post(`${API_BASE_URL}/api/register`, credentials);
-console.log(status);
+
         let { username, email } = credentials;
 
         /** send email */
