@@ -96,10 +96,12 @@ module.exports = class user {
     /**user login */
     static login(username, password){
         return new Promise((resolve,reject)=>{
+
             let sqlQuery = `CALL verifyUser('${username}')`;
             con.query(sqlQuery, async (err, success) => {
-                console.log("SS",success[0]);
-                if(success[0].length > 0){
+
+                console.log("SS",success);
+                if(success[0].length > 0){ 
                     let sqlQuery = `
                     SELECT u.password AS password 
                     FROM users u
@@ -107,13 +109,13 @@ module.exports = class user {
                     con.query(sqlQuery,async (err,result)=>{
           
                         let existingPwd = result[0].password; 
-                        const isMatch = await bcrypt.compare(password, existingPwd);
+                        const isMatch = await bcrypt.compare(password, existingPwd); 
 
                         if(isMatch){
                             /**create jwt token */
-                            console.log(success[0][0].id)
+                            console.log(success[0][0].id) 
                             const token =    jwt.sign({
-                                    userId : success[0][0].id,
+                                    userId : success[0][0].id, 
                                     username : success[0][0].username
                                 },process.env.SECRET_KEY,{expiresIn : "24h"})
                          

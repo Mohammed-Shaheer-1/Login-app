@@ -17,8 +17,10 @@ CREATE TABLE users(
 CREATE INDEX email_index
 ON users (email);
 
+
 CREATE TABLE details(
     id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    userId INT(11) NOT NULL,
     email VARCHAR(255) NOT NULL,
     first_name VARCHAR(255) NOT NULL ,
     last_name VARCHAR(255) NOT NULL ,
@@ -27,7 +29,8 @@ CREATE TABLE details(
     address VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+    deleted_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES  users(id)
 );
 -- user insertion
 DELIMITER //
@@ -38,7 +41,7 @@ END ;
 
 --user details insertion
 DELIMITER //
-CREATE PROCEDURE insertUserDetails(first_name VARCHAR(255),last_name VARCHAR(255),email  VARCHAR(255),mobile VARCHAR(15),address VARCHAR(255), profile VARCHAR(255))
+CREATE PROCEDURE insertUserDetails(user_id INT(11), first_name VARCHAR(255),last_name VARCHAR(255),email  VARCHAR(255),mobile VARCHAR(15),address VARCHAR(255), profile VARCHAR(255))
 BEGIN
-		INSERT INTO details(details.first_name,details.last_name,details.email,details.mobile,details.address,details.profile) 		VALUES(first_name,last_name,email,mobile,address,profile);
+INSERT INTO details(details.userId,details.first_name,details.last_name,details.email,details.mobile,details.address,details.profile) VALUES(userId,first_name,last_name,email,mobile,address,profile);
 END ;

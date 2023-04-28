@@ -5,7 +5,7 @@ exports.SendGeneratedOTPCode = (to, otp) =>
 {
     return new Promise((resolve, reject) =>
     {
-        const transporter = nodemailer.createTransport
+        const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider
             port : 465,    // -> True for 465, false for other ports
@@ -16,11 +16,11 @@ exports.SendGeneratedOTPCode = (to, otp) =>
                 pass : 'ybpkooosqsbpboeu' // replace with your email password
             },
             secure : true,  
-        });
+        }); 
 
         const mailOptions = 
         {
-            from : process.env.adminemail, // replace with your email address
+            from : 'sp832154@gmail.com', // replace with your email address
             to : to, // recipient's email address
             subject : 'Email Verification',
             text : `Your OTP or Link for email verification is: ${otp}`
@@ -35,9 +35,10 @@ exports.SendGeneratedOTPCode = (to, otp) =>
             }
             else
             {
+                console.log("haiii");
                 // console.log('Email sent:', info.response);
                 resolve(info.response); // Resolve the promise with the email response
             }
         });
     });
-};
+};             
