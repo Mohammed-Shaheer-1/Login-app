@@ -6,7 +6,7 @@ const helper = require('../helper/helper');
 
 const con = require('../config/db.cofig');
 const user = require('../modal/user.modal');
-
+const jwt = require('jsonwebtoken');
 const mail =require('./mailer')
 /**
  *URL : http://localhost:8080/api/register
@@ -386,6 +386,7 @@ exports.getUserDetails = async (req, res) => {
 
 
 exports.checkEmail = async (req,res)=>{
+
     try{
         const { text,userEmail,subject } = req.body;
        const   OTP  = req.app.locals.OTP
@@ -412,4 +413,7 @@ exports.generateLink = async (req,res)=>{
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 01015f0a12cc125107e038f8af3520a081f70902
