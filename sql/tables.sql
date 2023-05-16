@@ -43,3 +43,15 @@ CREATE PROCEDURE insertUserDetails(user_id INT(11), first_name VARCHAR(255),last
 BEGIN
 INSERT INTO details(details.userId,details.first_name,details.last_name,details.email,details.mobile,details.address,details.profile) VALUES(userId,first_name,last_name,email,mobile,address,profile);
 END ;
+
+CREATE TABLE login_attempts(
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    userId INT(11) NOT NULL,
+    blocked_at TIMESTAMP DEFAULT NULL,
+    blocked_ip  VARCHAR(45),
+    attempt_count INT,
+    blocked_until DATETIME DEFAULT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES  users(id)
+);

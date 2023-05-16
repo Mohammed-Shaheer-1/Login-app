@@ -23,7 +23,7 @@ app.use(morgan('tiny'));
 app.disable('x-powered-by'); //less hackers know about our stack
 app.use('/api',router)
 app.use(cors({
-    origin:'http://localhost:3000'
+    origin:'http://localhost:3000' 
   }))
 
 

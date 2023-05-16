@@ -19,12 +19,12 @@ router.route('/login').post(verifyUser,controller.login)//login app
 /**GET Metheods */
 router.route('/user/:username').get(controller.getUser)//get user 
 router.route('/userDetails').get(controller.getUserDetails)//get user
-router.route('/generateOTP').get(verifyUser,localVariables,controller.generateOTP)//generate random OTP
+router.route('/generateOTP').get(localVariables,controller.generateOTP)//generate random OTP
 router.route('/verifyOTP').get(verifyUser,controller.verifyOTP)//verify genrated  OTP
 router.route('/createResetSession').get(controller.createResetSession)//reset all variables   
   
-/**PUT Metheods */
-router.route('/updateUser').put(Auth,controller.updateUser)//is use to update user profile
+/**PUT Metheods*/
+router.route('/updateUser').put(Auth,controller.updateUser);//is use to update user profile
 router.route('/resetPassword').put(verifyUser,controller.resetPassword)//is use to reset password
 router.route('/sendMail').post(verifyUser,controller.checkEmail)
 module.exports=router;

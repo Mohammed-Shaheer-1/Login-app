@@ -12,15 +12,15 @@ exports.SendGeneratedOTPCode = (to, otp ,text,subject) =>
             host : "smtp.gmail.com",
             auth :
             {
-                user : 'sp832154@gmail.com', // replace with your email address
-                pass : 'ybpkooosqsbpboeu' // replace with your email password
+                user : process.env.EMAIL, // replace with your email address
+                pass : process.env.EMAIL_PWD // replace with your email password
             },
             secure : true,  
         }); 
 
         const mailOptions = 
         {
-            from : 'sp832154@gmail.com', // replace with your email address
+            from : process.env.EMAIL, // replace with your email address
             to : to, // recipient's email address
             subject : subject,
             text : text

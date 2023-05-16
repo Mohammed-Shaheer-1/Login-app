@@ -9,7 +9,7 @@ const mysql = require('mysql');
 require('dotenv').config();
 
        /** create connection */
-        var  con =mysql.createConnection
+        var  con =mysql.createConnection 
         ({ 
             host : process.env.USER_HOST, // hostname
             user : process.env.USER_ROOT, // username

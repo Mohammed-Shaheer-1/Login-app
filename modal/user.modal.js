@@ -4,7 +4,8 @@ require('dotenv').config();
 
 const con = require('../config/db.cofig')
 const helper = require('../helper/helper')
-const mailer = require('../controller/mailer')
+const mailer = require('../controller/mailer');
+const { query } = require('express');
 
 module.exports = class user {
     constructor() { }
@@ -100,10 +101,11 @@ module.exports = class user {
             let sqlQuery = `CALL verifyUser('${username}')`;
             con.query(sqlQuery, async (err, success) => {
 
-                console.log("SS",success);
+               
                 if(success[0].length > 0){ 
+                    let userId = success[0][0].id
                     let sqlQuery = `
-                    SELECT u.password AS password 
+                    SELECT u.password AS password , u.id userId
                     FROM users u
                     WHERE u.username = '${username}'`
                     con.query(sqlQuery,async (err,result)=>{
@@ -113,7 +115,7 @@ module.exports = class user {
 
                         if(isMatch){
                             /**create jwt token */
-                            console.log(success[0][0].id) 
+                   
                             const token =    jwt.sign({
                                     userId : success[0][0].id, 
                                     username : success[0][0].username
@@ -121,22 +123,116 @@ module.exports = class user {
                          
                         //   let genMail = await   mailer.SendGeneratedOTPCode('shanshaheer3@gmail.com','123456')
                         //   console.log("ff",genMail);
-                            resolve({
-                                statusCode: 201,
-                                success: true,
-                                message: "success fully login",  
-                                token,
-                                data : [
-                                    {user : success[0]}
-                                ]
-                             
-                            })
+                        
+                        let updateCount = `UPDATE login_attempts lg
+                                            SET lg.attempt_count = NULL
+                                            WHERE lg.userId = ${userId}`
+                        con.query(updateCount, async (err,result)=>{
+                                if(!err){
+                                    resolve({
+                                        statusCode: 201,
+                                        success: true,
+                                        message: "success fully login",  
+                                        token,
+                                        data : [
+                                            {user : success[0]}
+                                        ]
+                                     
+                                    })
+                                }
+                        })                    
+          
                         }else{
-                            reject({
-                                statusCode: 400,
-                                success: false,
-                                message: "Invalid password"
-                            })
+                            let query = `
+                                            SELECT *
+                                            FROM login_attempts lg
+                                            WHERE lg.userId = ${userId}`
+                           con.query(query,async(err,result)=>{
+                                if(!err){
+                                
+                                    if(result.length != 0){
+                                            let getLoginattempt = `SELECT lg.attempt_count
+                                            FROM login_attempts lg
+                                            WHERE lg.userId = ${userId} AND lg.attempt_count IS NOT NULL`;
+
+                                          con.query(getLoginattempt,async(err,res)=>{
+                                                  console.log(res);
+                                                  if(res.length != 0){
+                                                    let count = await res[0].attempt_count +1
+                                                    console.log("count",count);
+                                                    let maximem_attempt = 3
+                                                    if(count<=maximem_attempt){
+                                                      console.log("yss");
+                                                          let query = `UPDATE login_attempts lg
+                                                          SET lg.attempt_count = lg.attempt_count + 1
+                                                          WHERE lg.userId = ${userId} AND lg.attempt_count IS NOT NULL`;
+                                                          con.query(query,(err,result)=>{
+                                                              if(!err){  
+                                                                  reject({
+                                                                      statusCode: 400 ,
+                                                                      success: false,
+                                                                      message: "Invalid password"
+                                                                  })
+                                                              }
+                                                          })
+                                                    }else{ 
+                                                        let query = `UPDATE login_attempts AS lg
+                                                            SET lg.blocked_at = DATE_FORMAT(CURRENT_TIMESTAMP, '%d/%m/%Y %H:%i:%s'),
+                                                            lg.blocked_until = DATE_ADD(DATE_FORMAT(CURRENT_TIMESTAMP, '%d/%m/%Y %H:%i:%s'), INTERVAL 1 MINUTE)
+                                                            WHERE lg.userId = ${userId};
+                                                        `;
+                                                    con.query(query,async(err,result)=>{
+                                                        if(!err){
+                                                            reject({
+                                                                statusCode: 400 ,
+                                                                success: false,
+                                                                message: "Try after 24h"
+                                                            })
+                                                        }
+                                                    })
+  
+                                                    
+                                                    }
+                                                    }else{
+                                                        let query = `UPDATE login_attempts lg
+                                                                     SET lg.attempt_count = 1
+                                                                     WHERE lg.userId = ${userId}`
+                                                        con.query(query,async (err,result)=>{
+                                                                    if(!err){
+                                                                        reject({
+                                                                            statusCode: 400 ,
+                                                                            success: false, 
+                                                                            message: "Invalid password"
+                                                                        })
+                                                                    }
+                                                        })             
+                                                    }
+                                               
+
+                                          })   
+
+                                           
+                                         
+                                    }else{
+                                        let query = `INSERT INTO login_attempts (userId, attempt_count)
+                                                     VALUES (${userId}, ${1});`
+                                            con.query(query,async(error,res)=>{
+                                              
+                                                if(!error){
+                                                    reject({
+                                                        statusCode: 400 ,
+                                                        success: false, 
+                                                        message: "Invalid password"
+                                                    })
+                                                }
+                                            })
+
+                                    }
+                            
+                                }
+                           })
+
+                    
                         }
                     })
               

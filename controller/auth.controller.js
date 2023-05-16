@@ -399,3 +399,17 @@ exports.checkEmail = async (req,res)=>{
 
     }
 }
+
+exports.generateLink = async (req,res)=>{
+    try{
+    const {username} = req.params
+    let token = jwt.sign({username},process.env.SECRET_KEY,{expiresIn : '59s'})
+            const link =`http://localhost:8080/resetLink/${token}` 
+
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
