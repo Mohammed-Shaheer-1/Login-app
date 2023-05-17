@@ -56,6 +56,7 @@ exports.login = async (req, res) => {
             data: users.data
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).send(error)
     }
 }
@@ -413,7 +414,3 @@ exports.generateLink = async (req,res)=>{
     }
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 01015f0a12cc125107e038f8af3520a081f70902

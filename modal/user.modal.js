@@ -124,8 +124,8 @@ module.exports = class user {
                         //   let genMail = await   mailer.SendGeneratedOTPCode('shanshaheer3@gmail.com','123456')
                         //   console.log("ff",genMail);
                         
-                        let updateCount = `UPDATE login_attempts lg
-                                            SET lg.attempt_count = NULL
+                        let updateCount =  `UPDATE login_attempts lg
+                                            SET lg.attempt_count = NULL, lg.blocked_at = NULL, lg.blocked_until = NULL
                                             WHERE lg.userId = ${userId}`
                         con.query(updateCount, async (err,result)=>{
                                 if(!err){
@@ -177,17 +177,26 @@ module.exports = class user {
                                                           })
                                                     }else{ 
                                                         let query = `UPDATE login_attempts AS lg
-                                                            SET lg.blocked_at = DATE_FORMAT(CURRENT_TIMESTAMP, '%d/%m/%Y %H:%i:%s'),
-                                                            lg.blocked_until = DATE_ADD(DATE_FORMAT(CURRENT_TIMESTAMP, '%d/%m/%Y %H:%i:%s'), INTERVAL 1 MINUTE)
-                                                            WHERE lg.userId = ${userId};
-                                                        `;
+                                                        SET lg.blocked_at = STR_TO_DATE(DATE_FORMAT(NOW(), '%d/%m/%Y %H:%i:%s'), '%d/%m/%Y %H:%i:%s'),
+                                                        lg.blocked_until = STR_TO_DATE(DATE_FORMAT(NOW() + INTERVAL 1 MINUTE, '%d/%m/%Y %H:%i:%s'), '%d/%m/%Y %H:%i:%s')
+                                                        WHERE lg.userId = ${userId};
+                                                         `;
                                                     con.query(query,async(err,result)=>{
                                                         if(!err){
-                                                            reject({
-                                                                statusCode: 400 ,
-                                                                success: false,
-                                                                message: "Try after 24h"
-                                                            })
+
+                                                            let query = `ALTER EVENT reset_login_attempts ENABLE`
+                                                            con.query(query,async (err,result)=>{
+                                                                console.log(err);
+                                                                if(!err){
+                                                                    reject({ 
+                                                                        statusCode: 400 ,
+                                                                        success: false,
+                                                                        message: "Try after 1 minute"
+                                                                    })
+                                                                } 
+
+                                                            }) 
+                                                       
                                                         }
                                                     })
   

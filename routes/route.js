@@ -4,10 +4,10 @@ const router = express.Router()
 /**import all controllers */
 const controller = require('../controller/auth.controller')
 
-const {verifyUser} = require('../middleware/user.middleware');
-const {Auth,localVariables} = require('../middleware/auth.middleware')
+const {verifyUser} = require('../middleware/user.middleware'); 
+const {Auth,localVariables} = require('../middleware/auth.middleware');
 
-        
+         
 
 /**POST Metheods */
 router.route('/register').post(controller.register)//register user

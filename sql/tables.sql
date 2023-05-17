@@ -55,3 +55,51 @@ CREATE TABLE login_attempts(
     updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES  users(id)
 );
+
+
+
+
+    
+DELIMITER //
+
+CREATE EVENT reset_login_attempts
+ON SCHEDULE
+    EVERY 1 MINUTE
+    STARTS CURRENT_TIMESTAMP 
+DO
+    BEGIN
+        DECLARE user_id INT;
+        SELECT lg.userId INTO user_id
+        FROM login_attempts lg
+        WHERE lg.blocked_at IS NOT NULL;
+
+        UPDATE login_attempts 
+        SET  blocked_until = STR_TO_DATE(NOW(), '%Y-%m-%d %H:%i:%s')
+        WHERE login_attempts.userId = user_id;
+    END //
+
+DELIMITER ;
+
+
+-- updated one 
+
+
+DELIMITER //
+
+CREATE EVENT reset_login_attempts
+ON SCHEDULE
+    EVERY 1 MINUTE
+    STARTS CURRENT_TIMESTAMP 
+DO
+    BEGIN
+        DECLARE user_id INT;
+        SELECT lg.userId INTO user_id
+        FROM login_attempts lg
+        WHERE lg.blocked_at IS NOT NULL;
+
+        UPDATE login_attempts 
+        SET  blocked_until = NULL, blocked_at = NULL ,attempt_count = NULL
+        WHERE login_attempts.userId = user_id;
+    END //
+
+DELIMITER ;
