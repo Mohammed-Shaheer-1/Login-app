@@ -1,4 +1,4 @@
-import React, { useEffect }  from 'react'
+import React from 'react'
 import avatar from '../assets/profile.png'
 import {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
@@ -51,7 +51,7 @@ const formik = useFormik({
                   <input {...formik.getFieldProps('username')} className={styles.textbox} type="text" placeholder='Username' />
                   <button className={styles.btn} type='submit'>Let's Go</button>
                   {/* <small>{formik?.values.username }</small> */}
-              </div>
+              </div> 
 
               <div className="text-center py-4">
                 <span className='text-gray-500'>Not a Member <Link className='text-red-500' to="/register">Register Now</Link></span>

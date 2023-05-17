@@ -119,7 +119,7 @@ export async function getUserDetails(userId){
 export async function registerUser(credentials){
     try {
         console.log(credentials);
-        const { data :{ message , statusCode} ,status } = await axios.post(`${API_BASE_URL}/api/register`, credentials);
+        const { data :{ message } ,status } = await axios.post(`${API_BASE_URL}/api/register`, credentials);
 
         // let { username, email } = credentials;
 
@@ -139,10 +139,15 @@ export async function verifyPassword({ username, password }){
     try {
         if(username){
             const { data } = await axios.post(`${API_BASE_URL}/api/login`, { username, password })
+         
             return Promise.resolve({ data });
+         
         }
-    } catch (error) {
-        return Promise.reject({ error : "Password doesn't Match...!"})
+    } catch ( error) {
+    
+       const {response:{data}} = await error
+       console.log("Err message",data.message);
+        return Promise.reject({ error : data.message})
     }
 }
 

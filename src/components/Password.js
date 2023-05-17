@@ -25,18 +25,24 @@ function Password() {
       console.log(values);
 
       let loginPromise = verifyPassword({ username, password : values.password })
+
+
       toast.promise(loginPromise, {
         loading: 'Checking...',
         success : <b>Login Successfully...!</b>,
-        error : <b>Password Not Match!</b>
+        error : <b>Password Not Match!</b>,
+        
       });
 
       loginPromise.then(res => {
+        console.log("res",res);
         let { token,data} = res.data;
         localStorage.setItem('token', token);
         let userId =data[0].user[0].id;
         setUserid(userId)
         navigate('/profile')
+      }).catch((err)=>{
+        console.log("err".err);
       })
     }   
   })
