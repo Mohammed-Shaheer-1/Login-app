@@ -103,3 +103,14 @@ DO
     END //
 
 DELIMITER ;
+
+
+
+CREATE TABLE password_policies (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  minimum_length INT NOT NULL,
+  require_uppercase BOOLEAN NOT NULL,
+  require_lowercase BOOLEAN NOT NULL,
+  require_numeric BOOLEAN NOT NULL,
+  require_special_chars BOOLEAN NOT NULL
+);

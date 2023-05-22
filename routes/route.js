@@ -6,14 +6,14 @@ const controller = require('../controller/auth.controller')
 
 const {verifyUser} = require('../middleware/user.middleware'); 
 const {Auth,localVariables} = require('../middleware/auth.middleware');
-
+const {checkPassword} = require('../middleware/passwordChecking')
          
 
 /**POST Metheods */
 router.route('/register').post(controller.register)//register user
 // router.route('/registerMail').post()//send the mail
 router.route('/authenticate').post(verifyUser,(req,res)=>res.end())//authenticate user
-router.route('/login').post(verifyUser,controller.login)//login app
+router.route('/login').post(verifyUser,checkPassword,controller.login)//login app
 
 
 /**GET Metheods */

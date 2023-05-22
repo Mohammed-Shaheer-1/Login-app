@@ -109,7 +109,7 @@ module.exports = class user {
                     FROM users u
                     WHERE u.username = '${username}'`
                     con.query(sqlQuery,async (err,result)=>{
-          
+  
                         let existingPwd = result[0].password; 
                         const isMatch = await bcrypt.compare(password, existingPwd); 
 
